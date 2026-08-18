@@ -109,6 +109,11 @@ pub struct OpdHeaderDirective {
 
     #[serde(rename = "lastFrameCorrected")]
     pub last_frame_corrected: Option<bool>,
+
+    /// Set when each centroid record carries per-particle damage columns
+    /// (`x50`, `undulation`, `xmax`, `severity`) after the optional volume column.
+    #[serde(rename = "hasDamage", skip_serializing_if = "Option::is_none")]
+    pub has_damage: Option<bool>,
 }
 
 #[derive(Deserialize, Debug, Serialize)]
