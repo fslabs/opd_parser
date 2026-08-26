@@ -15,16 +15,13 @@ test --test_output=errors
 test --local_test_jobs=HOST_CPUS
 
 # Prow's bazel-tests job runs `bazel test --config=ci`, so this config has to
-# exist even though bazel_test.sh appends the Buildbarn remote flags itself from
-# the BB_REMOTE_* env vars the preset-buildbarn label injects.
+# exist. It carries no remote flags on purpose: this repo opts out of Buildbarn
+# (`bazel_test.remote = false` in infra) because one crate over three public
+# dependencies builds locally in well under a minute, and RBE would only add a
+# dependency on a bearer token whose credential helper lives in fsl_libs.
+# Re-enabling RBE means restoring that preset AND vendoring the helper.
 common:ci --lockfile_mode=update
-build:ci --jobs=128
-build:ci --remote_timeout=600
 build:ci --repository_cache=/bazel-cache/repo-cache
-# Bazel 9 defaults to build-without-the-bytes; an evicting CAS then fails the
-# build with unrecoverable "Missing digest". Keep outputs local.
-build:ci --remote_download_all
-build:ci --experimental_remote_cache_eviction_retries=5
 
 try-import %workspace%/.bazelrc.ci
 try-import %workspace%/.bazelrc.user
