@@ -1,4 +1,3 @@
-filters:
-  ".*":
-    approvers:
-    - fslabs-all
+approvers:
+  - cutlerjake
+  - loispostula
