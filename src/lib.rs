@@ -53,17 +53,17 @@ where
         let max_value: usize = (1 << (std::mem::size_of::<T>() * 8 - 1)) - 1;
         let max_value = max_value as f32;
         let arr: [f32; 3] = [
-            match self.iter.next() {
-                Some(a) => (*a).into() / max_value,
-                None => return None,
+            {
+                let a = self.iter.next()?;
+                (*a).into() / max_value
             },
-            match self.iter.next() {
-                Some(a) => (*a).into() / max_value,
-                None => return None,
+            {
+                let a = self.iter.next()?;
+                (*a).into() / max_value
             },
-            match self.iter.next() {
-                Some(a) => (*a).into() / max_value,
-                None => return None,
+            {
+                let a = self.iter.next()?;
+                (*a).into() / max_value
             },
         ];
         Some(arr)

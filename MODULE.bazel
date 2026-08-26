@@ -1,0 +1,33 @@
+RUST_VERSION = "1.94.0"
+
+RULES_RUST_VERSION = "0.71.2"
+
+module(
+    name = "opd_parser",
+    version = "0.5.0",
+)
+
+bazel_dep(name = "rules_rust", version = RULES_RUST_VERSION)
+
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+
+# rustfmt defaults to a nightly whose import sorting disagrees with the stable
+# rustfmt `cargo fmt` runs (rust-toolchain.toml channel 1.94), which shows up as
+# phantom format diffs between local and CI. Pin both to the same release.
+rust.toolchain(
+    rustfmt_version = RUST_VERSION,
+    versions = [RUST_VERSION],
+)
+use_repo(rust, "rust_toolchains")
+
+register_toolchains("@rust_toolchains//:all")
+
+# Every dependency is a public crates.io crate, so no cargo_config and no
+# credential helper: nothing here reaches crates.fsl.dev.
+crates = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+crates.from_cargo(
+    name = "crates",
+    cargo_lockfile = "//:Cargo.lock",
+    manifests = ["//:Cargo.toml"],
+)
+use_repo(crates, "crates")

@@ -1,0 +1,30 @@
+build --verbose_failures
+build --disk_cache=~/.cache/bazel-disk
+build --lockfile_mode=update
+
+# Clippy on every build; cached, so repeat runs cost nothing.
+build --aspects=@rules_rust//rust:defs.bzl%rust_clippy_aspect
+build --output_groups=+clippy_checks
+
+# Proc macros and build tools run once and do not ship.
+build --host_compilation_mode=fastbuild
+
+build --keep_going
+test --build_tests_only
+test --test_output=errors
+test --local_test_jobs=HOST_CPUS
+
+# Prow's bazel-tests job runs `bazel test --config=ci`, so this config has to
+# exist even though bazel_test.sh appends the Buildbarn remote flags itself from
+# the BB_REMOTE_* env vars the preset-buildbarn label injects.
+common:ci --lockfile_mode=update
+build:ci --jobs=128
+build:ci --remote_timeout=600
+build:ci --repository_cache=/bazel-cache/repo-cache
+# Bazel 9 defaults to build-without-the-bytes; an evicting CAS then fails the
+# build with unrecoverable "Missing digest". Keep outputs local.
+build:ci --remote_download_all
+build:ci --experimental_remote_cache_eviction_retries=5
+
+try-import %workspace%/.bazelrc.ci
+try-import %workspace%/.bazelrc.user
