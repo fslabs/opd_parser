@@ -1,7 +1,7 @@
 [package]
 name = "opd-parser"
 description = "Parser for the OPD point cloud animation format"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 authors = [
     "Zhixing Zhang <zhixing.zhang@foresightmining.com>"
