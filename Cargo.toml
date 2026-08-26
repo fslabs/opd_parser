@@ -7,10 +7,17 @@ authors = [
     "Zhixing Zhang <zhixing.zhang@foresightmining.com>"
 ]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/ForesightMiningSoftwareCorporation/opd_parser"
+repository = "https://github.com/fslabs/opd_parser"
+publish = ["fsl"]
 
 
 [dependencies]
 nom = "7"
 serde_json = "1"
 serde = { version = "1", features = ["derive"] }
+
+# fslabscli reads this to decide what `fslabscli publish` does. `allow_public`
+# adds crates.io alongside the `fsl` registry from `publish` above, preserving
+# the public release the retired rust-build.yml did with publish_public_registry.
+[package.metadata.fslabs.publish.cargo]
+allow_public = true

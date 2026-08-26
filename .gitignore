@@ -1,2 +1,6 @@
 /target
-/Cargo.lock
+# Cargo.lock is committed: crate_universe resolves the Bazel crate graph from it.
+/bazel-*
+/MODULE.bazel.lock
+/.bazelrc.ci
+/.bazelrc.user

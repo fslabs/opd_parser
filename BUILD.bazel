@@ -1,0 +1,29 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = [
+    "@crates//:nom",
+    "@crates//:serde",
+    "@crates//:serde_json",
+]
+
+rust_library(
+    name = "opd_parser",
+    srcs = glob(["src/lib.rs", "src/parser.rs"]),
+    crate_name = "opd_parser",
+    edition = "2021",
+    deps = DEPS,
+)
+
+rust_test(
+    name = "opd_parser_test",
+    crate = ":opd_parser",
+)
+
+rust_binary(
+    name = "opd_parser_bin",
+    srcs = ["src/main.rs"],
+    edition = "2021",
+    deps = [":opd_parser"],
+)
