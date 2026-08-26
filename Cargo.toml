@@ -8,7 +8,11 @@ authors = [
 ]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/fslabs/opd_parser"
-publish = ["fsl"]
+# Cargo's own allowlist, checked before any upload. Omitting crates-io here is
+# what kept 0.6.0 off the public registry while fsl moved ahead: `cargo publish`
+# refuses with "the registry `crates-io` is not listed in the `package.publish`
+# value". "crates.io" is not a legal registry name to cargo and cannot be used.
+publish = ["fsl", "crates-io"]
 
 
 [dependencies]
